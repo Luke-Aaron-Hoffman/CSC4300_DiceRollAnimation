@@ -1,0 +1,288 @@
+<html>
+
+	<head>
+		<title>Dice Roller</title>
+		<style type="text/css">
+			body{
+				margin:0px;
+			}
+			canvas{
+				height:100%;
+				width:100%;
+			}
+			button {
+				display: block;
+			}
+		</style>
+		
+		<input id="rolld4" type="button" value="Roll d4" onclick="d4();" />
+		<input id="rolld6" type="button" value="Roll d6" onclick="d6();" />
+		<input id="rolld8" type="button" value="Roll d8" onclick="d8();" />
+		<input id="rolld12" type="button" value="Roll d12" onclick="d12();" />
+		<input id="rolld20" type="button" value="Roll d20" onclick="d20();" />
+		<script src = "three.min.js" type="text/javascript"></script>
+	</head>
+	
+	<body>
+		<script type = "text/javascript">
+		console.log("main stuff happening.");
+			var scene = new THREE.Scene();
+			var camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+			camera.position.set(0, 0, 0);
+			camera.position.x = 3;
+			camera.position.y = 3;
+			camera.position.z = 3;
+			camera.lookAt(scene.position);
+			
+			var velocityX = Math.random() * 1;
+			var velocityY = Math.random() * 1;
+			var velocityZ = Math.random() * 1;
+			var die = null;
+
+			var renderer = new THREE.WebGLRenderer();
+			renderer.setClearColor(0x000000);
+			scene.background = new THREE.Color(0xff0000);
+			renderer.setSize(window.innerWidth, window.innerHeight);
+			
+			var materialsUV = [];
+			var materials = [];
+			var texturesUV = [
+					new THREE.TextureLoader().load('Numbers/1.jpg'),
+					new THREE.TextureLoader().load('Numbers/2.jpg'),
+					new THREE.TextureLoader().load('Numbers/3.jpg'),
+					new THREE.TextureLoader().load('Numbers/4.jpg'),
+					new THREE.TextureLoader().load('Numbers/5.jpg'),
+					new THREE.TextureLoader().load('Numbers/6.jpg'),
+					new THREE.TextureLoader().load('Numbers/7.jpg'),
+					new THREE.TextureLoader().load('Numbers/8.jpg'),
+					new THREE.TextureLoader().load('Numbers/9.jpg'),
+					new THREE.TextureLoader().load('Numbers/10.jpg'),
+					new THREE.TextureLoader().load('Numbers/11.jpg'),
+					new THREE.TextureLoader().load('Numbers/12.jpg'),
+					new THREE.TextureLoader().load('Numbers/13.jpg'),
+					new THREE.TextureLoader().load('Numbers/14.jpg'),
+					new THREE.TextureLoader().load('Numbers/15.jpg'),
+					new THREE.TextureLoader().load('Numbers/16.jpg'),
+					new THREE.TextureLoader().load('Numbers/17.jpg'),
+					new THREE.TextureLoader().load('Numbers/18.jpg'),
+					new THREE.TextureLoader().load('Numbers/19.jpg'),
+					new THREE.TextureLoader().load('Numbers/20.jpg')
+				];
+				var textures = [
+					new THREE.TextureLoader().load('Numbers/1.jpg'),
+					new THREE.TextureLoader().load('Numbers/2.jpg'),
+					new THREE.TextureLoader().load('Numbers/3.jpg'),
+					new THREE.TextureLoader().load('Numbers/4.jpg'),
+					new THREE.TextureLoader().load('Numbers/5.jpg'),
+					new THREE.TextureLoader().load('Numbers/6.jpg'),
+					new THREE.TextureLoader().load('Numbers/7.jpg'),
+					new THREE.TextureLoader().load('Numbers/8.jpg'),
+					new THREE.TextureLoader().load('Numbers/9.jpg'),
+					new THREE.TextureLoader().load('Numbers/10.jpg'),
+					new THREE.TextureLoader().load('Numbers/11.jpg'),
+					new THREE.TextureLoader().load('Numbers/12.jpg'),
+					new THREE.TextureLoader().load('Numbers/13.jpg'),
+					new THREE.TextureLoader().load('Numbers/14.jpg'),
+					new THREE.TextureLoader().load('Numbers/15.jpg'),
+					new THREE.TextureLoader().load('Numbers/16.jpg'),
+					new THREE.TextureLoader().load('Numbers/17.jpg'),
+					new THREE.TextureLoader().load('Numbers/18.jpg'),
+					new THREE.TextureLoader().load('Numbers/19.jpg'),
+					new THREE.TextureLoader().load('Numbers/20.jpg')
+				];
+				for (var i = 0; i < texturesUV.length; i++) {
+					materials.push(new THREE.MeshBasicMaterial({map: textures[i]}));
+					texturesUV[i].repeat.set(2, 2);
+					texturesUV[i].offset.x = 0;
+					texturesUV[i].offset.y = -.8;
+					texturesUV[i].flipY = false;
+					materialsUV.push(new THREE.MeshBasicMaterial({
+						map: texturesUV[i]
+					}));
+				}
+				
+			var d20 = function() {
+				var geometry = new THREE.IcosahedronGeometry(1);
+				geometry.faceVertexUvs[0] = [];
+
+				for (var i = 0; i < geometry.faces.length; i++) {
+					geometry.faceVertexUvs[0].push([
+						new THREE.Vector2(0, 0),
+						new THREE.Vector2(0, 1),
+						new THREE.Vector2(1, 1)
+					]);
+
+					geometry.faces[i].materialIndex = i;
+				}
+				geometry.computeFaceNormals();
+
+				geometry.dynamic = true;
+				geometry.uvsNeedUpdate = true;
+				
+				die = new THREE.Mesh(geometry, materialsUV);
+				while(scene.children.length > 0){ 
+					scene.remove(scene.children[0]); 
+				}
+				scene.add(die);
+
+				die.position.set(0, 0, 0);
+
+				velocityX = Math.random() * 1;
+				velocityY = Math.random() * 1;
+				velocityZ = Math.random() * 1;
+				GameLoop();
+			}
+			var d4 = function() {
+				var geometry = new THREE.TetrahedronGeometry(1);
+				geometry.faceVertexUvs[0] = [];
+
+				for (var i = 0; i < geometry.faces.length; i++) {
+					geometry.faceVertexUvs[0].push([
+						new THREE.Vector2(0, 0),
+						new THREE.Vector2(0, 1),
+						new THREE.Vector2(1, 1)
+					]);
+
+					geometry.faces[i].materialIndex = i;
+				}
+				geometry.computeFaceNormals();
+
+				geometry.dynamic = true;
+				geometry.uvsNeedUpdate = true;
+				
+				die = new THREE.Mesh(geometry, materialsUV);
+				while(scene.children.length > 0){ 
+					scene.remove(scene.children[0]); 
+				}
+				scene.add(die);
+
+				die.position.set(0, 0, 0);
+
+				velocityX = Math.random() * 1;
+				velocityY = Math.random() * 1;
+				velocityZ = Math.random() * 1;
+				GameLoop();
+			}
+			var d6 = function() {
+				var geometry = new THREE.BoxGeometry(1);
+				
+				die = new THREE.Mesh(geometry, materials);
+				while(scene.children.length > 0){ 
+					scene.remove(scene.children[0]); 
+				}
+				scene.add(die);
+
+				die.position.set(0, 0, 0);
+
+				velocityX = Math.random() * 1;
+				velocityY = Math.random() * 1;
+				velocityZ = Math.random() * 1;
+				GameLoop();
+			}
+			var d12 = function() {
+				var geometry = new THREE.DodecahedronGeometry(1);
+				geometry.faceVertexUvs[0] = [];
+
+				for (var i = 0; i < geometry.faces.length; i++) {
+					geometry.faceVertexUvs[0].push([
+						new THREE.Vector2(0, 0),
+						new THREE.Vector2(0, 1),
+						new THREE.Vector2(1, 1)
+					]);
+
+					geometry.faces[i].materialIndex = i;
+				}
+				geometry.computeFaceNormals();
+
+				geometry.dynamic = true;
+				geometry.uvsNeedUpdate = true;
+				//load 20 faces
+				
+				die = new THREE.Mesh(geometry, materialsUV);
+				while(scene.children.length > 0){ 
+					scene.remove(scene.children[0]); 
+				}
+				scene.add(die);
+
+				die.position.set(0, 0, 0);
+
+				velocityX = Math.random() * 1;
+				velocityY = Math.random() * 1;
+				velocityZ = Math.random() * 1;
+				GameLoop();
+			}
+			var d8 = function() {
+				var geometry = new THREE.OctahedronGeometry(1);
+				geometry.faceVertexUvs[0] = [];
+
+				for (var i = 0; i < geometry.faces.length; i++) {
+					geometry.faceVertexUvs[0].push([
+						new THREE.Vector2(0, 0),
+						new THREE.Vector2(0, 1),
+						new THREE.Vector2(1, 1)
+					]);
+
+					geometry.faces[i].materialIndex = i;
+				}
+				geometry.computeFaceNormals();
+
+				geometry.dynamic = true;
+				geometry.uvsNeedUpdate = true;
+				//load 20 faces
+				
+				die = new THREE.Mesh(geometry, materialsUV);
+				while(scene.children.length > 0){ 
+					scene.remove(scene.children[0]); 
+				}
+				scene.add(die);
+
+				die.position.set(0, 0, 0);
+				camera.position.set(0, 0, 0);
+				camera.position.x = 3;
+				camera.position.y = 3;
+				camera.position.z = 3;
+				camera.lookAt(scene.position);
+
+				velocityX = Math.random() * 1;
+				velocityY = Math.random() * 1;
+				velocityZ = Math.random() * 1;
+				GameLoop();
+			}
+			
+			document.body.appendChild(renderer.domElement);
+			
+			var update = function() {
+				//LOGIC
+				if (velocityY > 0) {
+					die.rotation.y += velocityY;
+					velocityY -= .01;
+				}
+				if (velocityX > 0) {
+					die.rotation.x += velocityX;
+					velocityX -= .01;
+				}
+				if (velocityZ > 0) {
+					die.rotation.Z += velocityZ;
+					velocityZ -= .01;
+				}
+
+			};
+
+			var draw = function() {
+				//rendering
+				renderer.render(scene, camera);
+			};
+
+			var GameLoop = function() {
+				update();
+				draw();
+				if(velocityY+velocityX+velocityZ<=0)
+					return;
+				requestAnimationFrame(GameLoop);
+			};
+			if(die!=null)
+				GameLoop();
+			draw();
+		</script>
+	</body>
+</html>
